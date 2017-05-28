@@ -4,23 +4,19 @@
 class Zyper
 {
 	public:
-		Zyper (std::string filename);
+		Zyper (const string&);
 		virtual ~Zyper ();
-
 	private:
 		// Members
-		int lifes;
-		std::vector<std::string> words;
-		std::random_device rd;
-		std::mt19937 gen;
-		std::uniform_int_distribution<> dis;
-		
+		vector<string> words;
+		random_device rd;
+		mt19937 gen;
+		uniform_int_distribution<> dis;
 		
 		// Methods
-		std::string& next_word (void);
-		void wait (const unsigned short);
-		void countdown ();
-		void gameloop ();
+		void wait (const int);
+		void countdown (void);
+		void gameloop (void);
 };
 
 #endif // __ZYPER_H__

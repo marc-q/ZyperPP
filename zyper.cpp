@@ -23,17 +23,15 @@
 #include <vector>
 #include <chrono>
 #include <thread>
-#include "zyper.h"
-using namespace std;
-using namespace std::chrono;
 
-Zyper::Zyper (string filename)
+using namespace std;
+using namespace chrono;
+#include "zyper.h"
+
+Zyper::Zyper (const string& filename)
 {
-	// Set the default values
-	this->lifes = 3;
-	
 	// Read the file containing the words
-	ifstream f (filename.c_str());
+	ifstream f (filename.c_str ());
 	if (!f.is_open ())
 	{
 		cout << "ERROR: Can't open the file " << filename << "!\n";
@@ -43,31 +41,25 @@ Zyper::Zyper (string filename)
 	string a;
 	while (f >> a)
 	{
-		this->words.push_back (a);
+		words.push_back (a);
 	}
-	
-	// Random device
-	this->gen = mt19937 (this->rd());
-	this->dis = uniform_int_distribution<> (0, this->words.size() - 1);
 	f.close ();
 	
+	// Random device
+	gen = mt19937 (rd ());
+	dis = uniform_int_distribution<> (0, words.size () - 1);
+	
 	// Start the game
-	this->gameloop ();
+	gameloop ();
 }
 
 Zyper::~Zyper (void)
 {
-	this->words.clear();
-}
-
-string&
-Zyper::next_word (void)
-{
-	return this->words.at (this->dis (gen));
+	words.clear ();
 }
 
 void
-Zyper::wait (const unsigned short secs)
+Zyper::wait (const int secs)
 {
 	this_thread::sleep_for (seconds (secs));
 }
@@ -75,14 +67,14 @@ Zyper::wait (const unsigned short secs)
 void
 Zyper::countdown (void)
 {
-	cout << "1\n";
-	this->wait (1);
+	cout << "3\n";
+	wait (1);
 	
 	cout << "2\n";
-	this->wait (1);
+	wait (1);
 	
-	cout << "3\n";
-	this->wait (1);
+	cout << "1\n";
+	wait (1);
 	
 	cout << "GO!\n";
 }
@@ -91,31 +83,29 @@ void
 Zyper::gameloop (void)
 {
 	// Print the rules
-	cout << "Welcome to Zyper!\nType the given wrd correctly.";
-	cout << "Youve got " << to_string (this->lifes) << " lifes. Each ";
-	cout << "failure results in losing 1 life.\nYouve got 1 minute!\n";
-
+	cout << "Welcome to Zyper!\nType the given word correctly.\n"
+	     << "Youve got 3 lifes and 1 minute.\nEach failure results in "
+	     << "losing 1 life.\n";
+	
+	countdown ();
+	
 	// Variables
-	string word = "";
-	string word_in = "";
-	int words_correct = 0;
-	
-	this->countdown ();
-	
-	// Starttime
+	int lifes = 3, tl = 60, words_correct = 0;
+	size_t word;
+	string word_in;
 	system_clock::time_point t;
-	int tl = 60;
 	
-	while (this->lifes > 0)
+	while (lifes > 0)
 	{
-		word = this->next_word ();
-		cout << "Type: " << word << "\n";
+		// Select a random word to type
+		word = dis (gen);
+		cout << "\nType: " << words[word] << "\n";
 		
-		t = system_clock::now(); 
+		t = system_clock::now ();
 		cin >> word_in;
 		
 		// Calculate the time left
-		tl -= duration_cast<seconds>(system_clock::now() - t).count();
+		tl -= duration_cast<seconds>(system_clock::now () - t).count ();
 		
 		if (tl <= 0)
 		{
@@ -123,22 +113,23 @@ Zyper::gameloop (void)
 			break;
 		}
 		
-		if (word_in == word)
+		if (word_in == words[word])
 		{
-			cout << "DONE " << to_string (tl) << " seconds left!\n";
-			words_correct++;
+			cout << "DONE " << tl << " seconds left!\n";
+			++words_correct;
 		}
 		else
 		{
-			cout << "WRONG! Lifes: " << --this->lifes << "\n";
+			cout << "WRONG " << --lifes << " lifes left!\n";
 		}
 	}
 	
-	cout << "\n\nCorrect words: " << to_string (words_correct) << "\n";
+	cout << "\n\nCorrect words: " << words_correct << "\n";
 }
 
-int main (int argc, char const* argv[])
+int
+main (int argc, char *argv[])
 {
-	Zyper game ((argc == 2 ?  (string)argv[1] : "lang_c.txt"));
+	Zyper game (argc == 2 ? argv[1] : "lang_c.txt");
 	return 0;
 }
