@@ -1,7 +1,7 @@
 CC = g++
 OBJECTS = zyper.cpp
 LIBS =
-CFLAGS = -Wall -Wextra -O2 --std=c++14
+CFLAGS = --std=c++14 -Wall -Wextra -flto -O2
 BINDIR = $(DESTDIR)/usr/bin
 NAME = zyper
 
