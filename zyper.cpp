@@ -34,7 +34,7 @@ Zyper::Zyper (const string& filename)
 	ifstream f (filename.c_str ());
 	if (!f.is_open ())
 	{
-		cout << "ERROR: Can't open the file " << filename << "!\n";
+		cerr << "ERROR: Can't open the file " << filename << "!\n";
 		return;
 	}
 	
@@ -89,7 +89,7 @@ Zyper::gameloop (void)
 	
 	countdown ();
 	
-	// Variables
+	// Some variables needed inside the loop
 	int lifes = 3, tl = 60, words_correct = 0;
 	size_t word;
 	string word_in;
@@ -99,12 +99,12 @@ Zyper::gameloop (void)
 	{
 		// Select a random word to type
 		word = dis (gen);
-		cout << "\nType: " << words[word] << "\n";
+		cout << "\nType: " << words[word] << '\n';
 		
 		t = system_clock::now ();
 		cin >> word_in;
 		
-		// Calculate the time left
+		// Calculate the time left in seconds
 		tl -= duration_cast<seconds>(system_clock::now () - t).count ();
 		
 		if (tl <= 0)
@@ -124,7 +124,7 @@ Zyper::gameloop (void)
 		}
 	}
 	
-	cout << "\n\nCorrect words: " << words_correct << "\n";
+	cout << "\n\nCorrect words: " << words_correct << '\n';
 }
 
 int
