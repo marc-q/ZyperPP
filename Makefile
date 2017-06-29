@@ -1,5 +1,5 @@
 CC = g++
-OBJECTS = zyper.cpp
+OBJECTS = src/zyper.cpp
 LIBS =
 CFLAGS = --std=c++14 -Wall -Wextra -flto -O2
 BINDIR = $(DESTDIR)/usr/bin
