@@ -26,6 +26,7 @@
 
 using namespace std;
 using namespace chrono;
+#include "colors.h"
 #include "zyper.h"
 
 Zyper::Zyper (const string& filename)
@@ -115,12 +116,14 @@ Zyper::gameloop (void)
 		
 		if (word_in == words[word])
 		{
-			cout << "DONE " << tl << " seconds left!\n";
+			cout << BC_TXT_GREEN << "DONE " << BC_TXT_RST
+			     << tl << " seconds left!\n";
 			++words_correct;
 		}
 		else
 		{
-			cout << "WRONG " << --lifes << " lifes left!\n";
+			cout << BC_TXT_RED << "WRONG " << BC_TXT_RST
+			     << --lifes << " lifes left!\n";
 		}
 	}
 	
